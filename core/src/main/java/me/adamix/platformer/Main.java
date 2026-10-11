@@ -15,7 +15,8 @@ public class Main extends ApplicationAdapter {
     public ShapeRenderer shape;
     public Hrac hrac;
     public Struct HracStruct = new Struct(50, 150, 50, 50);
-    public Struct zemStr = new Struct(0,0,640,10);
+    public KontrolaKolizi colisionListener;
+    public CSO randomTest;
     public World world;
     public CSO zem;
 
@@ -26,7 +27,10 @@ public class Main extends ApplicationAdapter {
         image = new Texture("libgdx.png");
         world = new World(new Vector2(0, -9.8f), true);
         hrac = new Hrac(shape, HracStruct, world);
-        zem = new CSO(zemStr, world);
+        colisionListener = new KontrolaKolizi(hrac);
+        zem = new CSO(0,0,10,640, world);
+        randomTest = new CSO( 50, 50, 40,50, world);
+        world.setContactListener(colisionListener);
 
     }
 
@@ -36,6 +40,7 @@ public class Main extends ApplicationAdapter {
         batch.begin();
        // batch.draw(image, 140, 210);
         batch.end();
+        randomTest.drawCSO();
         zem.drawCSO();
         hrac.aktualizacePozice();
         hrac.pohyb();
