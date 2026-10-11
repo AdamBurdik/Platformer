@@ -1,58 +1,55 @@
 package me.adamix.platformer;
 
 import com.badlogic.gdx.ApplicationAdapter;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.ScreenUtils;
 
-/** {@link com.badlogic.gdx.ApplicationListener} implementation shared by all platforms. */
 public class Main extends ApplicationAdapter {
-    private SpriteBatch batch;
-    private Texture image;
-    public ShapeRenderer shape;
-    public Hrac hrac;
-    public Struct HracStruct = new Struct(50, 150, 50, 50);
-    public KontrolaKolizi colisionListener;
-    public CSO randomTest;
-    public World world;
-    public CSO zem;
+    private static final float TIME_STEP = 1f / 60f;
+    private static final int VELOCITY_ITERATIONS = 6;
+    private static final int POSITION_ITERATIONS = 2;
+    
+    private static final float GRAVITY = -9.8f;
+
+    private ShapeRenderer shapes;
+    private World world;
+
+    private Player player;
+    private StaticObject ground;
+    private StaticObject block;
+    private StaticObject platform;
 
     @Override
     public void create() {
-        batch = new SpriteBatch();
-        shape = new ShapeRenderer();
-        image = new Texture("libgdx.png");
-        world = new World(new Vector2(0, -9.8f), true);
-        hrac = new Hrac(shape, HracStruct, world);
-        colisionListener = new KontrolaKolizi(hrac);
-        zem = new CSO(0,0,10,640, world);
-        randomTest = new CSO( 50, 50, 40,50, world);
-        world.setContactListener(colisionListener);
+        shapes = new ShapeRenderer();
+        world = new World(new Vector2(0, GRAVITY), true);
 
+        player = new Player(world, 50, 150, 50, 50);
+
+        ground = new StaticObject(world, 0, 0, 640, 10);
+        block = new StaticObject(world, 200, 10, 60, 40);
+        platform = new StaticObject(world, 450, 150, 140, 20);
+
+        world.setContactListener(new CollisionListener(player));
     }
 
     @Override
     public void render() {
+        world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
+        player.update();
+
         ScreenUtils.clear(0.15f, 0.15f, 0.2f, 1f);
-        batch.begin();
-       // batch.draw(image, 140, 210);
-        batch.end();
-        randomTest.drawCSO();
-        zem.drawCSO();
-        hrac.aktualizacePozice();
-        hrac.pohyb();
-        hrac.drawCtverec();
-        world.step(1/60f, 6, 2);
-
-
+        ground.draw(shapes);
+        block.draw(shapes);
+        platform.draw(shapes);
+        player.draw(shapes);
     }
 
     @Override
     public void dispose() {
-        batch.dispose();
-        image.dispose();
+        shapes.dispose();
+        world.dispose();
     }
 }
