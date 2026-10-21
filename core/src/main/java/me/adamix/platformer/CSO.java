@@ -34,6 +34,7 @@ public class CSO {
         objekt.setAsBox(sirka / 2, vyska / 2);
         body.createFixture(objekt, 0.0f);
         objekt.dispose();
+
     }
 
     public void drawCSO(){

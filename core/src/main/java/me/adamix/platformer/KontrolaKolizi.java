@@ -11,6 +11,10 @@ public class KontrolaKolizi implements ContactListener {
     private int i = 0;
     private int p = 0;
     private int l = 0;
+    private boolean res = false;
+
+    public int RESPAWN_X = 50;
+    public int RESPAWN_Y = 50;
 
     public KontrolaKolizi(Hrac hrac){
         this.hrac = hrac;
@@ -29,8 +33,18 @@ public class KontrolaKolizi implements ContactListener {
             l++;
             hrac.necoNaLevo = true;
         }
+        if (("killable".equals(contact.getFixtureA().getUserData()) || "killable".equals(contact.getFixtureB().getUserData())) &&
+            ("Player".equals(contact.getFixtureA().getUserData()) ||"Player".equals(contact.getFixtureB().getUserData())) )
+        {
+           res = true;
+        }
+    }
 
-
+    public void  respawn(){
+        if (res == true){
+            hrac.body.setTransform(RESPAWN_X, RESPAWN_Y, 0);
+            res = false;
+        }
     }
 
     @Override

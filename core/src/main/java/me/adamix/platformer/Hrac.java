@@ -54,6 +54,7 @@ public class Hrac {
         fixtureDef.friction = 0.4f;
         fixtureDef.restitution = 0.0f;
         Fixture fixture = body.createFixture(fixtureDef);
+        fixture.setUserData("Player");
         ctverec.dispose();
 
         detector("HracDetektorPrava", "prava");
@@ -64,11 +65,11 @@ public class Hrac {
     public void detector(String jmeno_detektoru, String ff){
         PolygonShape contactDetector = new PolygonShape();
         if (ff.equals("dole")) {
-            contactDetector.setAsBox(sirka / 2 * 0.9f, vyska * 0.05f, new Vector2(0, -vyska / 2), 0);
+            contactDetector.setAsBox(sirka / 2 * 0.9f, vyska * 0.02f, new Vector2(0, -vyska / 2), 0);
         } else if (ff.equals("prava")) {
-            contactDetector.setAsBox(sirka * 0.05f, vyska / 2 * 0.9f, new Vector2(sirka / 2, 0), 0);
+            contactDetector.setAsBox(sirka * 0.02f, vyska / 2 * 0.9f, new Vector2(sirka / 2, 0), 0);
         } else if (ff.equals("leva")) {
-            contactDetector.setAsBox(sirka * 0.05f, vyska / 2 * 0.9f, new Vector2(-sirka / 2, 0), 0);
+            contactDetector.setAsBox(sirka * 0.02f, vyska / 2 * 0.9f, new Vector2(-sirka / 2, 0), 0);
         }
         FixtureDef sensorDef = new FixtureDef();
         sensorDef.shape = contactDetector;
@@ -81,7 +82,7 @@ public class Hrac {
 
     public void gravitaceIg(){
         Vector2 vector = body.getLinearVelocity();
-        System.out.println("vector y je " + vector.y);
+       // System.out.println("vector y je " + vector.y);
         if (vector.y <= 0){
             body.setGravityScale(2.5f);
         } else if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
